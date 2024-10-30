@@ -81,7 +81,7 @@ app.post("/webhook/orders", async (req, res) => {
     res.status(200).send("Notificación recibida correctamente");
 });
 app.get("/", (req, res) => {
-    res.send("hola");
+    res.status(200).send("mensaje");
 });
 
 app.listen(3000, () => {
