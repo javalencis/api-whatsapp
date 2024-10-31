@@ -80,6 +80,13 @@ app.post("/webhook/orders", async (req, res) => {
     // Responde a VTEX confirmando la recepción
     res.status(200).send("Notificación recibida correctamente");
 });
+
+app.post("/order", (req, res) => {
+    const { orderId } = req.body;
+
+    res.status(200).json({ message: orderId });
+});
+
 app.get("/", (req, res) => {
     console.log("mensaje simple");
     res.status(200).json({ message: "prueba" });
