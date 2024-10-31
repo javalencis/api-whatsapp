@@ -33,21 +33,21 @@ app.post("/webhook/orders", async (req, res) => {
     console.log("Nueva notificación de orden recibida:", orderData);
     console.log(orderData.OrderId);
 
-    // const order = await getOrderDetails(orderData.OrderId);
-    // const paymentSystem =
-    //     order.paymentData.transactions[0].payments[0].paymentSystem;
+    const order = await getOrderDetails(orderData.OrderId);
+    const paymentSystem =
+        order.paymentData.transactions[0].payments[0].paymentSystem;
 
-    // const phone = removeCountryCode(order.clientProfileData.phone);
-    // const name = order.clientProfileData.firstName;
+    const phone = removeCountryCode(order.clientProfileData.phone);
+    const name = order.clientProfileData.firstName;
 
-    // if (paymentSystem == "17") {
-    //     if (!phone) {
-    //         console.log("Telefono no ingresado");
-    //     } else {
-    //         console.log("Hola, ", name);
-    //         console.log("Telefono: ", phone);
-    //     }
-    // }
+    if (paymentSystem == "17") {
+        if (!phone) {
+            console.log("Telefono no ingresado");
+        } else {
+            console.log("Hola, ", name);
+            console.log("Telefono: ", phone);
+        }
+    }
 
     // try {
     //     const response = await axios.post(
@@ -81,6 +81,7 @@ app.post("/webhook/orders", async (req, res) => {
     res.status(200).send("Notificación recibida correctamente");
 });
 app.get("/", (req, res) => {
+    console.log("mensaje simple");
     res.status(200).send("mensaje");
 });
 
