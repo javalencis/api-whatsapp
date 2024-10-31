@@ -82,7 +82,7 @@ app.post("/webhook/orders", async (req, res) => {
 });
 app.get("/", (req, res) => {
     console.log("mensaje simple");
-    res.status(200).send("mensaje");
+    res.status(200).json(message:"prueba");
 });
 
 app.listen(3000, () => {
