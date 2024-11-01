@@ -54,7 +54,7 @@ const getPaymentDetails = async (orderId) => {
 
 const sendPayment = async (orderId, paymentId) => {
     try {
-        const response = await axios.get(
+        const response = await axios.post(
             `https://micco.vtexcommercestable.com.br/api/oms/pvt/orders/${orderId}/payments/${paymentId}/payment-notification`,
             {
                 headers: {
