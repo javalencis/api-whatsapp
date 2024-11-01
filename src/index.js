@@ -130,19 +130,9 @@ app.post("/order", async (req, res) => {
                     orderId,
                     paymentData.payments[0].id
                 );
-                console.log(approvedPayment);
-                if (approvedPayment.success) {
-                    return res
-                        .status(200)
-                        .send(
-                            "Muchas gracias por tu confirmación. ¡La magia cada vez más cerca!"
-                        );
-                } else {
-                    return res.status(400).json({
-                        message: `El pago del pedido ${orderId} no pudo ser aprobado.`,
-                        paymentStatus: "not approved",
-                    });
-                }
+                console.log(approvedPayment.status);
+
+                return res.status(approvedPayment.status);
             } catch (error) {
                 console.error(
                     `Error al aprobar el pago para el pedido ${orderId}:`,
