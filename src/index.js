@@ -3,6 +3,7 @@ import { error } from "console";
 import express from "express";
 import https from "https";
 import { removeCountryCode } from "./utils/utils.js";
+import { sendMessage } from "./middleware/sendMessage.js";
 const app = express();
 app.use(express.json());
 
@@ -104,7 +105,7 @@ const sendTemplate = async (phone) => {
             "https://management.broadcasterbot.com/v1/companies/1938/simplifiedTemplates/sendings/",
             {
                 templateName: "procesofinalcontraentrega",
-                bodyParameters: [], // Aquí puedes personalizar el contenido
+                bodyParameters: [],
                 workgroupId: 2433,
                 agentId: 4090,
                 name: "API",
@@ -138,8 +139,9 @@ app.post("/webhook/orders", async (req, res) => {
     const phone = removeCountryCode(order.clientProfileData.phone);
     const name = order.clientProfileData.firstName;
     if (phone == "3003566925") {
+        await sendMessage("57" + phone, name);
         await sendTemplate(phone);
-        // Responde a VTEX confirmando la recepción
+
         res.status(200).send("Notificación recibida correctamente");
     }
 });
