@@ -49,7 +49,7 @@ export const sendMessage = async (toNumber, messageText) => {
                 type: "template",
                 template: {
                     language: "es",
-                    name: "inicioprocesocontraentrega",
+                    name: "pinicialcontraentrega",
                     components: [
                         {
                             type: "body",
