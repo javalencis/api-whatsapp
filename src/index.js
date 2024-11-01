@@ -58,10 +58,11 @@ const sendPayment = async (orderId, paymentId) => {
             `https://micco.vtexcommercestable.com.br/api/oms/pvt/orders/${orderId}/payments/${paymentId}/payment-notification`,
             {
                 headers: {
+                    Accept: "application/json",
+                    "Content-Type": "application/json",
                     "X-VTEX-API-AppKey": "vtexappkey-micco-FMQDKJ",
                     "X-VTEX-API-AppToken":
                         "SQDUINADCXSWSPLIWFBXRVWRQGIJVBWNWWWUVHINSWWTPTVJHYDNTSLWQPXRECIRZADHXKVYVAFOGKGFTMECPMZAASUKGBKNEEQWTJURRABXIAUFSZONQVAUYAHIDLXG",
-                    "Content-Type": "application/json",
                 },
             }
         );
@@ -125,12 +126,13 @@ app.post("/order", async (req, res) => {
         const paymentData = await getPaymentDetails(orderId);
 
         if (paymentData.isActive) {
-            console.log(paymentData);
+            console.log(paymentData.payments.id);
             try {
                 const approvedPayment = await sendPayment(
                     orderId,
                     paymentData.payments.id
                 );
+                console.log(approvedPayment);
                 if (approvedPayment.success) {
                     return res
                         .status(200)
