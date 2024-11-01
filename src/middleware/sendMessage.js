@@ -82,6 +82,8 @@ export const sendMessage = async (toNumber, messageText) => {
 
 export const sendOrderId = async (toNumber, messageText) => {
     try {
+        const token = await getValidToken();
+
         const response = await axios.post(
             "http://your-url/whatsapp-bsp-api-endpoint-ws/services/v1/messaging",
             {
