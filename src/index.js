@@ -130,7 +130,7 @@ app.post("/order", async (req, res) => {
             try {
                 const approvedPayment = await sendPayment(
                     orderId,
-                    paymentData.payments.id
+                    paymentData.payments[0].id
                 );
                 console.log(approvedPayment);
                 if (approvedPayment.success) {
