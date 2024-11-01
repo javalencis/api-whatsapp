@@ -75,48 +75,50 @@ const sendPayment = async (orderId, paymentId) => {
     }
 };
 
+const sendTemplate = async (phone) => {
+    try {
+        const response = await axios.post(
+            "https://management.broadcasterbot.com/v1/companies/1938/simplifiedTemplates/sendings/",
+            {
+                templateName: "procesofinalcontraentrega",
+                bodyParameters: [], // Aquí puedes personalizar el contenido
+                workgroupId: 2433,
+                agentId: 4090,
+                name: "API",
+                country: "CO",
+                phone: phone,
+            },
+            {
+                headers: {
+                    Authorization:
+                        "Bearer 7TDFvMq7s7BePvBzd33VN9FOd8ouWmZDO3oimyS8v5E=",
+                    "Content-Type": "application/json",
+                },
+            }
+        );
+        console.log("Mensaje enviado a Broadcasterbot:", response.data);
+    } catch (error) {
+        console.error(
+            "Error al enviar mensaje a Broadcasterbot:",
+            error.response?.data || error.message
+        );
+    }
+};
+
 app.post("/webhook/orders", async (req, res) => {
     const orderData = req.body;
     console.log("Nueva notificación de orden recibida:", orderData);
     console.log(orderData.OrderId);
 
-    // const order = await getOrderDetails(orderData.OrderId);
-    // const paymentSystem =
-    //     order.paymentData.transactions[0].payments[0].paymentSystem;
+    const order = await getOrderDetails(orderData.OrderId);
 
-    // const phone = removeCountryCode(order.clientProfileData.phone);
-    // const name = order.clientProfileData.firstName;
-
-    // try {
-    //     const response = await axios.post(
-    //         "https://management.broadcasterbot.com/v1/companies/1938/simplifiedTemplates/sendings/",
-    //         {
-    //             templateName: "validarcontraentrega",
-    //             bodyParameters: [name, orderData.OrderId], // Aquí puedes personalizar el contenido
-    //             workgroupId: 2433,
-    //             agentId: 4090,
-    //             name: "API",
-    //             country: "CO",
-    //             phone: phone,
-    //         },
-    //         {
-    //             headers: {
-    //                 Authorization:
-    //                     "Bearer 7TDFvMq7s7BePvBzd33VN9FOd8ouWmZDO3oimyS8v5E=",
-    //                 "Content-Type": "application/json",
-    //             },
-    //         }
-    //     );
-    //     console.log("Mensaje enviado a Broadcasterbot:", response.data);
-    // } catch (error) {
-    //     console.error(
-    //         "Error al enviar mensaje a Broadcasterbot:",
-    //         error.response?.data || error.message
-    //     );
-    // }
-
-    // Responde a VTEX confirmando la recepción
-    res.status(200).send("Notificación recibida correctamente");
+    const phone = removeCountryCode(order.clientProfileData.phone);
+    const name = order.clientProfileData.firstName;
+    if (phone == "3003566925") {
+        await sendTemplate(phone);
+        // Responde a VTEX confirmando la recepción
+        res.status(200).send("Notificación recibida correctamente");
+    }
 });
 
 app.post("/order", async (req, res) => {
