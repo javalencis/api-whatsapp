@@ -14,8 +14,9 @@ const getAuthToken = async () => {
                 },
             }
         );
-        authToken = response.data.token; // Suponiendo que el token está en 'response.data.token'
-        tokenExpiration = Date.now() + 24 * 60 * 60 * 1000; // 24 horas de expiración
+        authToken = response.data.token;
+        console.log(authToken);
+        tokenExpiration = Date.now() + 24 * 60 * 60 * 1000;
         return authToken;
     } catch (error) {
         console.error(
@@ -39,6 +40,7 @@ const getValidToken = async () => {
 export const sendMessage = async (toNumber, messageText) => {
     try {
         const token = await getValidToken();
+        console.log(token);
         const response = await axios.post(
             "https://whatsapp.broadcastermobile.com/whatsapp-bsp-api-endpoint-ws/services/v1/messaging",
             {
