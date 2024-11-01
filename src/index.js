@@ -132,7 +132,7 @@ app.post("/order", async (req, res) => {
                 );
                 console.log(approvedPayment.status);
 
-                return res.status(approvedPayment.status);
+                return res.sendStatus(approvedPayment.status);
             } catch (error) {
                 console.error(
                     `Error al aprobar el pago para el pedido ${orderId}:`,
