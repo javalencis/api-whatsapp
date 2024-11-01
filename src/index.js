@@ -28,6 +28,53 @@ const getOrderDetails = async (orderId) => {
         throw error;
     }
 };
+
+const getPaymentDetails = async (orderId) => {
+    try {
+        const response = await axios.get(
+            `https://micco.vtexcommercestable.com.br/api/oms/pvt/orders/${orderId}/payment-transaction`,
+            {
+                headers: {
+                    "X-VTEX-API-AppKey": "vtexappkey-micco-FMQDKJ",
+                    "X-VTEX-API-AppToken":
+                        "SQDUINADCXSWSPLIWFBXRVWRQGIJVBWNWWWUVHINSWWTPTVJHYDNTSLWQPXRECIRZADHXKVYVAFOGKGFTMECPMZAASUKGBKNEEQWTJURRABXIAUFSZONQVAUYAHIDLXG",
+                    "Content-Type": "application/json",
+                },
+            }
+        );
+        return response.data;
+    } catch (error) {
+        console.error(
+            `Error al obtener detalles del pedido ${orderId}:`,
+            error.response?.data || error.message
+        );
+        throw error;
+    }
+};
+
+const sendPayment = async (orderId, paymentId) => {
+    try {
+        const response = await axios.get(
+            `https://micco.vtexcommercestable.com.br/api/oms/pvt/orders/${orderId}/payments/${paymentId}/payment-notification`,
+            {
+                headers: {
+                    "X-VTEX-API-AppKey": "vtexappkey-micco-FMQDKJ",
+                    "X-VTEX-API-AppToken":
+                        "SQDUINADCXSWSPLIWFBXRVWRQGIJVBWNWWWUVHINSWWTPTVJHYDNTSLWQPXRECIRZADHXKVYVAFOGKGFTMECPMZAASUKGBKNEEQWTJURRABXIAUFSZONQVAUYAHIDLXG",
+                    "Content-Type": "application/json",
+                },
+            }
+        );
+        return response;
+    } catch (error) {
+        console.error(
+            `Error al aprobar pago`,
+            error.response?.data || error.message
+        );
+        throw error;
+    }
+};
+
 app.post("/webhook/orders", async (req, res) => {
     const orderData = req.body;
     console.log("Nueva notificación de orden recibida:", orderData);
@@ -39,15 +86,6 @@ app.post("/webhook/orders", async (req, res) => {
 
     // const phone = removeCountryCode(order.clientProfileData.phone);
     // const name = order.clientProfileData.firstName;
-
-    // if (paymentSystem == "17") {
-    //     if (!phone) {
-    //         console.log("Telefono no ingresado");
-    //     } else {
-    //         console.log("Hola, ", name);
-    //         console.log("Telefono: ", phone);
-    //     }
-    // }
 
     // try {
     //     const response = await axios.post(
@@ -81,10 +119,56 @@ app.post("/webhook/orders", async (req, res) => {
     res.status(200).send("Notificación recibida correctamente");
 });
 
-app.post("/order", (req, res) => {
+app.post("/order", async (req, res) => {
     const { orderId } = req.body;
+    try {
+        const paymentData = await getPaymentDetails(orderId);
 
-    res.status(200).json({ message: orderId });
+        if (paymentData.isActive) {
+            console.log("Entro Aquí");
+            try {
+                const approvedPayment = await sendPayment(
+                    orderId,
+                    paymentData.payments.id
+                );
+                if (approvedPayment.success) {
+                    return res
+                        .status(200)
+                        .send(
+                            "Muchas gracias por tu confirmación. ¡La magia cada vez más cerca!"
+                        );
+                } else {
+                    return res.status(400).json({
+                        message: `El pago del pedido ${orderId} no pudo ser aprobado.`,
+                        paymentStatus: "not approved",
+                    });
+                }
+            } catch (error) {
+                console.error(
+                    `Error al aprobar el pago para el pedido ${orderId}:`,
+                    error.message
+                );
+                return res.status(500).json({
+                    message: `Error al intentar aprobar el pago para el pedido ${orderId}.`,
+                    error: error.message,
+                });
+            }
+        } else {
+            return res.status(400).json({
+                message: `El pago para el pedido ${orderId} no está activo.`,
+                paymentStatus: paymentData.status,
+            });
+        }
+    } catch (error) {
+        console.error(
+            `Error al obtener detalles del pago para el pedido ${orderId}:`,
+            error.message
+        );
+        return res.status(500).json({
+            message: `Error al obtener detalles del pago para el pedido ${orderId}.`,
+            error: error.message,
+        });
+    }
 });
 
 app.get("/", (req, res) => {
