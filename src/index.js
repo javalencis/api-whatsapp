@@ -138,7 +138,11 @@ app.post("/webhook/orders", async (req, res) => {
 
     const phone = removeCountryCode(order.clientProfileData.phone);
     const name = order.clientProfileData.firstName;
-    if (phone == "3003566925") {
+    if (
+        phone == "3003566925" ||
+        phone == "3012642378" ||
+        phone == "3167422116"
+    ) {
         await sendMessage("57" + phone, name);
         await sendOrderId("57" + phone, orderData.OrderId);
         await sendTemplate(phone);
