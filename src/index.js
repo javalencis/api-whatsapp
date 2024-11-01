@@ -128,7 +128,7 @@ app.post("/order", async (req, res) => {
             try {
                 await sendPayment(orderId, paymentData.payments[0].id);
 
-                return res.sendStatus(200);
+                return res.status(200).json({ messaje: "Pago aprobado" });
             } catch (error) {
                 console.error(
                     `Error al aprobar el pago para el pedido ${orderId}:`,
