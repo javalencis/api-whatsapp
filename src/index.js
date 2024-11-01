@@ -126,7 +126,7 @@ app.post("/order", async (req, res) => {
         const paymentData = await getPaymentDetails(orderId);
 
         if (paymentData.isActive) {
-            console.log(paymentData.payments.id);
+            console.log(paymentData.payments[0].id);
             try {
                 const approvedPayment = await sendPayment(
                     orderId,
