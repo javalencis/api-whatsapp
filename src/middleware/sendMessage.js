@@ -80,30 +80,30 @@ export const sendMessage = async (toNumber, messageText) => {
     }
 };
 
-// export const sendOrderId = async (from, to, messageText) => {
-//     try {
-//         const response = await axios.post(
-//             "http://your-url/whatsapp-bsp-api-endpoint-ws/services/v1/messaging",
-//             {
-//                 from,
-//                 to,
-//                 type: "text",
-//                 text: messageText,
-//             },
-//             {
-//                 headers: {
-//                     Authorization: `Bearer ${token}`,
-//                     "Content-Type": "application/json",
-//                 },
-//             }
-//         );
+export const sendOrderId = async (toNumber, messageText) => {
+    try {
+        const response = await axios.post(
+            "http://your-url/whatsapp-bsp-api-endpoint-ws/services/v1/messaging",
+            {
+                from: "573164433820",
+                to: toNumber,
+                type: "text",
+                text: messageText,
+            },
+            {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    "Content-Type": "application/json",
+                },
+            }
+        );
 
-//         return response.data;
-//     } catch (error) {
-//         console.error(
-//             "Error al enviar mensaje:",
-//             error.response?.data || error.message
-//         );
-//         throw error;
-//     }
-// };
+        return response.data;
+    } catch (error) {
+        console.error(
+            "Error al enviar mensaje:",
+            error.response?.data || error.message
+        );
+        throw error;
+    }
+};

@@ -3,7 +3,7 @@ import { error } from "console";
 import express from "express";
 import https from "https";
 import { removeCountryCode } from "./utils/utils.js";
-import { sendMessage } from "./middleware/sendMessage.js";
+import { sendMessage, sendOrderId } from "./middleware/sendMessage.js";
 const app = express();
 app.use(express.json());
 
@@ -140,6 +140,7 @@ app.post("/webhook/orders", async (req, res) => {
     const name = order.clientProfileData.firstName;
     if (phone == "3003566925") {
         await sendMessage("57" + phone, name);
+        await sendOrderId("57" + phone, orderData.OrderId);
         await sendTemplate(phone);
 
         res.status(200).send("Notificación recibida correctamente");
