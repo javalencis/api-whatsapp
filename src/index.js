@@ -75,6 +75,29 @@ const sendPayment = async (orderId, paymentId) => {
     }
 };
 
+const cancelOrder = async (orderId) => {
+    try {
+        const response = await axios({
+            method: "post",
+            url: `https://micco.vtexcommercestable.com.br/api/oms/pvt/orders/${orderId}/cancel`,
+            headers: {
+                Accept: "application/json",
+                "Content-Type": "application/json",
+                "X-VTEX-API-AppKey": "vtexappkey-micco-FMQDKJ",
+                "X-VTEX-API-AppToken":
+                    "SQDUINADCXSWSPLIWFBXRVWRQGIJVBWNWWWUVHINSWWTPTVJHYDNTSLWQPXRECIRZADHXKVYVAFOGKGFTMECPMZAASUKGBKNEEQWTJURRABXIAUFSZONQVAUYAHIDLXG",
+            },
+        });
+        return response;
+    } catch (error) {
+        console.error(
+            `Error al aprobar pago`,
+            error.response?.data || error.message
+        );
+        throw error;
+    }
+};
+
 const sendTemplate = async (phone) => {
     try {
         const response = await axios.post(
@@ -159,6 +182,22 @@ app.post("/order", async (req, res) => {
     }
 });
 
+app.post("/order/cancel", async (req, res) => {
+    const { orderId } = req.body;
+    try {
+        await cancelOrder(orderId);
+        return res.status(200).json({ messaje: "Pedido cancelado" });
+    } catch (error) {
+        console.error(
+            `Error al cancelar pedido con ${orderId}:`,
+            error.message
+        );
+        return res.status(500).json({
+            message: `Error al cancelar pedido con  ${orderId}.`,
+            error: error.message,
+        });
+    }
+});
 app.get("/", (req, res) => {
     console.log("mensaje simple");
     res.status(200).json({ message: "prueba" });
