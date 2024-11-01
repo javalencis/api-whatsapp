@@ -54,18 +54,17 @@ const getPaymentDetails = async (orderId) => {
 
 const sendPayment = async (orderId, paymentId) => {
     try {
-        const response = await axios.post(
-            `https://micco.vtexcommercestable.com.br/api/oms/pvt/orders/${orderId}/payments/${paymentId}/payment-notification`,
-            {
-                headers: {
-                    Accept: "application/json",
-                    "Content-Type": "application/json",
-                    "X-VTEX-API-AppKey": "vtexappkey-micco-FMQDKJ",
-                    "X-VTEX-API-AppToken":
-                        "SQDUINADCXSWSPLIWFBXRVWRQGIJVBWNWWWUVHINSWWTPTVJHYDNTSLWQPXRECIRZADHXKVYVAFOGKGFTMECPMZAASUKGBKNEEQWTJURRABXIAUFSZONQVAUYAHIDLXG",
-                },
-            }
-        );
+        const response = await axios({
+            method: "post",
+            url: `https://micco.vtexcommercestable.com.br/api/oms/pvt/orders/${orderId}/payments/${paymentId}/payment-notification`,
+            headers: {
+                Accept: "application/json",
+                "Content-Type": "application/json",
+                "X-VTEX-API-AppKey": "vtexappkey-micco-FMQDKJ",
+                "X-VTEX-API-AppToken":
+                    "SQDUINADCXSWSPLIWFBXRVWRQGIJVBWNWWWUVHINSWWTPTVJHYDNTSLWQPXRECIRZADHXKVYVAFOGKGFTMECPMZAASUKGBKNEEQWTJURRABXIAUFSZONQVAUYAHIDLXG",
+            },
+        });
         return response;
     } catch (error) {
         console.error(
@@ -126,7 +125,6 @@ app.post("/order", async (req, res) => {
         const paymentData = await getPaymentDetails(orderId);
 
         if (paymentData.isActive) {
-            console.log(paymentData.payments[0].id);
             try {
                 const approvedPayment = await sendPayment(
                     orderId,
