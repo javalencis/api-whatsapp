@@ -85,7 +85,7 @@ export const sendOrderId = async (toNumber, messageText) => {
         const token = await getValidToken();
 
         const response = await axios.post(
-            "http://your-url/whatsapp-bsp-api-endpoint-ws/services/v1/messaging",
+            "https://whatsapp.broadcastermobile.com/whatsapp-bsp-api-endpoint-ws/services/v1/messaging",
             {
                 from: "573164433820",
                 to: toNumber,
