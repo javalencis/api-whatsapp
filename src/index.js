@@ -1,49 +1,10 @@
 import axios from "axios";
-import { error } from "console";
 import express from "express";
-import Bull from "bull";
 
 import { removeCountryCode } from "./utils/utils.js";
 import { sendMessage, sendOrderId } from "./middleware/sendMessage.js";
 const app = express();
 app.use(express.json());
-
-console.log(process.env.REDIS_PUBLIC_URL);
-const whatsappQueue = new Bull("whatsappQueue", {
-    redis: {
-        host: process.env.REDISHOST,
-        port: process.env.REDISPORT,
-        password: process.env.REDISPASSWORD,
-        maxRetriesPerRequest: null,
-        connectTimeout: 10000,
-        retryStrategy: (times) => {
-            return Math.min(times * 100, 3000);
-        },
-        reconnectOnError: (err) => {
-            const targetErrors = ["READONLY", "CONNECTION_BROKEN"];
-            if (
-                targetErrors.some((targetError) =>
-                    err.message.includes(targetError)
-                )
-            ) {
-                return true;
-            }
-            return false;
-        },
-    },
-});
-
-whatsappQueue.process(async (job) => {
-    const { phone, name, orderId } = job.data;
-    try {
-        await sendMessage("57" + phone, name);
-        await sendOrderId("57" + phone, orderId);
-        await sendTemplate(phone);
-        console.log(`Mensaje enviado a ${phone} después de 2 horas`);
-    } catch (error) {
-        console.error(`Error al enviar mensajes a ${phone}:`, error.message);
-    }
-});
 
 const getOrderDetails = async (orderId) => {
     try {
@@ -187,11 +148,19 @@ app.post("/webhook/orders", async (req, res) => {
         phone == "3012642378" ||
         phone == "3167422116"
     ) {
-        console.log("Guarda redis");
-        whatsappQueue.add(
-            { phone, name, orderId: orderData.OrderId },
-            { delay: 2 * 60 * 1000 }
-        );
+        setTimeout(async () => {
+            try {
+                await sendMessage("57" + phone, name);
+                await sendOrderId("57" + phone, orderId);
+                await sendTemplate(phone);
+                console.log(`Mensaje enviado a ${phone} después de 2 horas`);
+            } catch (error) {
+                console.error(
+                    `Error al enviar mensajes a ${phone}:`,
+                    error.message
+                );
+            }
+        }, process.env.DELAYMSN);
     }
 });
 
