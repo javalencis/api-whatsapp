@@ -8,10 +8,12 @@ import { sendMessage, sendOrderId } from "./middleware/sendMessage.js";
 const app = express();
 app.use(express.json());
 
-console.log(process.env.REDIS_URL);
+console.log(process.env.REDISHOST);
 const whatsappQueue = new Bull("whatsappQueue", {
     redis: {
-        url: process.env.REDIS_URL,
+        host: process.env.REDISHOST,
+        port: process.env.REDISPORT,
+        password: process.env.REDISPASSWORD,
     },
 });
 
