@@ -150,6 +150,7 @@ app.post("/webhook/orders", async (req, res) => {
         console.log("Orden recibida:", orderData.OrderId);
     } else {
         console.log(orderData);
+        return res.status(200).send("Nueva configuración o error");
     }
 
     const order = await getOrderDetails(orderData.OrderId);
