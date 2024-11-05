@@ -163,6 +163,7 @@ app.post("/webhook/orders", async (req, res) => {
     const phone = removeCountryCode(order.clientProfileData.phone);
     const name = order.clientProfileData.firstName;
     res.status(200).send("Notificación recibida correctamente");
+    console.log(phone);
     if (
         phone == "3007526144" ||
         phone == "3012642378" ||
