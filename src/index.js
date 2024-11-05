@@ -8,13 +8,7 @@ import { sendMessage, sendOrderId } from "./middleware/sendMessage.js";
 const app = express();
 app.use(express.json());
 
-const whatsappQueue = new Bull("whatsappQueue", {
-    redis: {
-        host: process.env.REDIS_HOST,
-        port: process.env.REDIS_PORT,
-        password: process.env.REDIS_PASSWORD,
-    },
-});
+const whatsappQueue = new Bull("whatsappQueue", process.env.REDIS_URL);
 
 whatsappQueue.process(async (job) => {
     const { phone, name, orderId } = job.data;
