@@ -146,23 +146,27 @@ const sendTemplate = async (phone) => {
 
 app.post("/webhook/orders", async (req, res) => {
     const orderData = req.body;
-    console.log("Orden recibida:", orderData.OrderId);
-
-    const order = await getOrderDetails(orderData.OrderId);
-
-    const phone = removeCountryCode(order.clientProfileData.phone);
-    const name = order.clientProfileData.firstName;
-    res.status(200).send("Notificación recibida correctamente");
-    if (
-        phone == "3003566925" ||
-        phone == "3012642378" ||
-        phone == "3167422116"
-    ) {
-        whatsappQueue.add(
-            { phone, name, orderId: orderData.OrderId },
-            { delay: 16 * 60 * 1000 } // 2 horas en milisegundos
-        );
+    if (orderData.OrderId) {
+        console.log("Orden recibida:", orderData.OrderId);
+    } else {
+        console.log(orderData);
     }
+
+    // const order = await getOrderDetails(orderData.OrderId);
+
+    // const phone = removeCountryCode(order.clientProfileData.phone);
+    // const name = order.clientProfileData.firstName;
+    // res.status(200).send("Notificación recibida correctamente");
+    // if (
+    //     phone == "3003566925" ||
+    //     phone == "3012642378" ||
+    //     phone == "3167422116"
+    // ) {
+    //     whatsappQueue.add(
+    //         { phone, name, orderId: orderData.OrderId },
+    //         { delay: 16 * 60 * 1000 } // 2 horas en milisegundos
+    //     );
+    // }
 });
 
 app.post("/order", async (req, res) => {
