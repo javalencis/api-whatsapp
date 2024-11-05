@@ -11,7 +11,25 @@ app.use(express.json());
 console.log(process.env.REDIS_PUBLIC_URL);
 const whatsappQueue = new Bull("whatsappQueue", {
     redis: {
-        url: process.env.REDIS_PUBLIC_URL,
+        host: process.env.REDISHOST,
+        port: process.env.REDISPORT,
+        password: process.env.REDISPASSWORD,
+        maxRetriesPerRequest: null,
+        connectTimeout: 10000,
+        retryStrategy: (times) => {
+            return Math.min(times * 100, 3000);
+        },
+        reconnectOnError: (err) => {
+            const targetErrors = ["READONLY", "CONNECTION_BROKEN"];
+            if (
+                targetErrors.some((targetError) =>
+                    err.message.includes(targetError)
+                )
+            ) {
+                return true;
+            }
+            return false;
+        },
     },
 });
 
