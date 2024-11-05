@@ -151,7 +151,7 @@ app.post("/webhook/orders", async (req, res) => {
         setTimeout(async () => {
             try {
                 await sendMessage("57" + phone, name);
-                await sendOrderId("57" + phone, orderId);
+                await sendOrderId("57" + phone, orderData.OrderId);
                 await sendTemplate(phone);
                 console.log(`Mensaje enviado a ${phone} después de 2 horas`);
             } catch (error) {
