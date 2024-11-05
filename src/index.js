@@ -8,6 +8,7 @@ import { sendMessage, sendOrderId } from "./middleware/sendMessage.js";
 const app = express();
 app.use(express.json());
 
+console.log(process.env.REDIS_URL);
 const whatsappQueue = new Bull("whatsappQueue", {
     redis: {
         url: process.env.REDIS_URL,
@@ -163,7 +164,7 @@ app.post("/webhook/orders", async (req, res) => {
     const name = order.clientProfileData.firstName;
     res.status(200).send("Notificación recibida correctamente");
     if (
-        phone == "3003566925" ||
+        phone == "3007526144" ||
         phone == "3012642378" ||
         phone == "3167422116"
     ) {
