@@ -1,11 +1,32 @@
 import axios from "axios";
 import { error } from "console";
 import express from "express";
-import https from "https";
+import Bull from "bull";
+
 import { removeCountryCode } from "./utils/utils.js";
 import { sendMessage, sendOrderId } from "./middleware/sendMessage.js";
 const app = express();
 app.use(express.json());
+
+const whatsappQueue = new Bull("whatsappQueue", {
+    redis: {
+        host: process.env.REDIS_HOST,
+        port: process.env.REDIS_PORT,
+        password: process.env.REDIS_PASSWORD,
+    },
+});
+
+whatsappQueue.process(async (job) => {
+    const { phone, name, orderId } = job.data;
+    try {
+        await sendMessage("57" + phone, name);
+        await sendOrderId("57" + phone, orderId);
+        await sendTemplate(phone);
+        console.log(`Mensaje enviado a ${phone} después de 2 horas`);
+    } catch (error) {
+        console.error(`Error al enviar mensajes a ${phone}:`, error.message);
+    }
+});
 
 const getOrderDetails = async (orderId) => {
     try {
@@ -131,23 +152,22 @@ const sendTemplate = async (phone) => {
 
 app.post("/webhook/orders", async (req, res) => {
     const orderData = req.body;
-    console.log("Nueva notificación de orden recibida:", orderData);
-    console.log(orderData.OrderId);
+    console.log("Orden recibida:", orderData.OrderId);
 
     const order = await getOrderDetails(orderData.OrderId);
 
     const phone = removeCountryCode(order.clientProfileData.phone);
     const name = order.clientProfileData.firstName;
+    res.status(200).send("Notificación recibida correctamente");
     if (
         phone == "3003566925" ||
         phone == "3012642378" ||
         phone == "3167422116"
     ) {
-        await sendMessage("57" + phone, name);
-        await sendOrderId("57" + phone, orderData.OrderId);
-        await sendTemplate(phone);
-
-        res.status(200).send("Notificación recibida correctamente");
+        whatsappQueue.add(
+            { phone, name, orderId: orderData.OrderId },
+            { delay: 16 * 60 * 1000 } // 2 horas en milisegundos
+        );
     }
 });
 
