@@ -163,6 +163,7 @@ app.post("/webhook/orders", async (req, res) => {
         phone == "3012642378" ||
         phone == "3167422116"
     ) {
+        console.log("Guarda redis");
         whatsappQueue.add(
             { phone, name, orderId: orderData.OrderId },
             { delay: 16 * 60 * 1000 } // 2 horas en milisegundos
