@@ -109,3 +109,32 @@ export const sendOrderId = async (toNumber, messageText) => {
         throw error;
     }
 };
+
+export const sendTemplate = async (phone) => {
+    try {
+        const response = await axios.post(
+            "https://management.broadcasterbot.com/v1/companies/1938/simplifiedTemplates/sendings/",
+            {
+                templateName: process.env.TEMPLATE_FINAL,
+                bodyParameters: [],
+                workgroupId: 2433,
+                agentId: 4090,
+                name: "API",
+                country: "CO",
+                phone: phone,
+            },
+            {
+                headers: {
+                    Authorization: `Bearer ${process.env.WP_TOKEN_TEMPLATE}`,
+                    "Content-Type": "application/json",
+                },
+            }
+        );
+        console.log("Mensaje enviado a Broadcasterbot:", response.data);
+    } catch (error) {
+        console.error(
+            "Error al enviar mensaje a Broadcasterbot:",
+            error.response?.data || error.message
+        );
+    }
+};
