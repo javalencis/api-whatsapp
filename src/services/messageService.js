@@ -82,24 +82,24 @@ export const sendMessage = async (toNumber, messageText) => {
 export const sendOrderId = async (toNumber, messageText) => {
     try {
         const token = await getValidToken();
-
-        const response = await axios.post(
-            "https://whatsapp.broadcastermobile.com/whatsapp-bsp-api-endpoint-ws/services/v1/messaging",
-            {
-                from: "573164433820",
-                to: toNumber,
-                type: "text",
-                text: messageText,
-            },
-            {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                    "Content-Type": "application/json",
+        setTimeout(async () => {
+            await axios.post(
+                "https://whatsapp.broadcastermobile.com/whatsapp-bsp-api-endpoint-ws/services/v1/messaging",
+                {
+                    from: "573164433820",
+                    to: toNumber,
+                    type: "text",
+                    text: messageText,
                 },
-            }
-        );
-        console.log("Envio de orderID ", response);
-        return response.data;
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                        "Content-Type": "application/json",
+                    },
+                }
+            );
+        }, 1000);
+        console.log("Envio de orderID ");
     } catch (error) {
         console.error(
             "Error al enviar mensaje:",
