@@ -12,9 +12,8 @@ const getOrderDetails = async (orderId) => {
             `https://micco.vtexcommercestable.com.br/api/oms/pvt/orders/${orderId}`,
             {
                 headers: {
-                    "X-VTEX-API-AppKey": "vtexappkey-micco-FMQDKJ",
-                    "X-VTEX-API-AppToken":
-                        "SQDUINADCXSWSPLIWFBXRVWRQGIJVBWNWWWUVHINSWWTPTVJHYDNTSLWQPXRECIRZADHXKVYVAFOGKGFTMECPMZAASUKGBKNEEQWTJURRABXIAUFSZONQVAUYAHIDLXG",
+                    "X-VTEX-API-AppKey": process.env.VTEX_APPKEY,
+                    "X-VTEX-API-AppToken": process.env.VTEX_APPTOKEN,
                     "Content-Type": "application/json",
                 },
             }
@@ -35,9 +34,8 @@ const getPaymentDetails = async (orderId) => {
             `https://micco.vtexcommercestable.com.br/api/oms/pvt/orders/${orderId}/payment-transaction`,
             {
                 headers: {
-                    "X-VTEX-API-AppKey": "vtexappkey-micco-FMQDKJ",
-                    "X-VTEX-API-AppToken":
-                        "SQDUINADCXSWSPLIWFBXRVWRQGIJVBWNWWWUVHINSWWTPTVJHYDNTSLWQPXRECIRZADHXKVYVAFOGKGFTMECPMZAASUKGBKNEEQWTJURRABXIAUFSZONQVAUYAHIDLXG",
+                    "X-VTEX-API-AppKey": process.env.VTEX_APPKEY,
+                    "X-VTEX-API-AppToken": process.env.VTEX_APPTOKEN,
                     "Content-Type": "application/json",
                 },
             }
@@ -60,9 +58,8 @@ const sendPayment = async (orderId, paymentId) => {
             headers: {
                 Accept: "application/json",
                 "Content-Type": "application/json",
-                "X-VTEX-API-AppKey": "vtexappkey-micco-FMQDKJ",
-                "X-VTEX-API-AppToken":
-                    "SQDUINADCXSWSPLIWFBXRVWRQGIJVBWNWWWUVHINSWWTPTVJHYDNTSLWQPXRECIRZADHXKVYVAFOGKGFTMECPMZAASUKGBKNEEQWTJURRABXIAUFSZONQVAUYAHIDLXG",
+                "X-VTEX-API-AppKey": process.env.VTEX_APPKEY,
+                "X-VTEX-API-AppToken": process.env.VTEX_APPTOKEN,
             },
         });
         return response;
@@ -83,9 +80,8 @@ const cancelOrder = async (orderId) => {
             headers: {
                 Accept: "application/json",
                 "Content-Type": "application/json",
-                "X-VTEX-API-AppKey": "vtexappkey-micco-FMQDKJ",
-                "X-VTEX-API-AppToken":
-                    "SQDUINADCXSWSPLIWFBXRVWRQGIJVBWNWWWUVHINSWWTPTVJHYDNTSLWQPXRECIRZADHXKVYVAFOGKGFTMECPMZAASUKGBKNEEQWTJURRABXIAUFSZONQVAUYAHIDLXG",
+                "X-VTEX-API-AppKey": process.env.VTEX_APPKEY,
+                "X-VTEX-API-AppToken": process.env.VTEX_APPTOKEN,
             },
         });
         return response;
@@ -103,7 +99,7 @@ const sendTemplate = async (phone) => {
         const response = await axios.post(
             "https://management.broadcasterbot.com/v1/companies/1938/simplifiedTemplates/sendings/",
             {
-                templateName: "procesofinalcontraentrega",
+                templateName: process.env.TEMPLATE_FINAL,
                 bodyParameters: [],
                 workgroupId: 2433,
                 agentId: 4090,
@@ -113,8 +109,7 @@ const sendTemplate = async (phone) => {
             },
             {
                 headers: {
-                    Authorization:
-                        "Bearer 7TDFvMq7s7BePvBzd33VN9FOd8ouWmZDO3oimyS8v5E=",
+                    Authorization: `Bearer ${process.env.WP_TOKEN_TEMPLATE}`,
                     "Content-Type": "application/json",
                 },
             }

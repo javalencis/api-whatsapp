@@ -9,8 +9,8 @@ const getAuthToken = async () => {
             "https://whatsapp.broadcastermobile.com/whatsapp-bsp-api-endpoint-ws/services/v1/auth/token",
             {
                 headers: {
-                    "Api-Key": "296",
-                    "Api-Token": "b1OoT93sALvqYFcnqy6ym162ouI=",
+                    "Api-Key": process.env.WP_APIKEY_AUTH,
+                    "Api-Token": process.env.WP_APITOKEN_AUTH,
                 },
             }
         );
@@ -49,7 +49,7 @@ export const sendMessage = async (toNumber, messageText) => {
                 type: "template",
                 template: {
                     language: "es",
-                    name: "pinicialcontraentrega",
+                    name: process.env.TEMPLATE_INICIAL,
                     components: [
                         {
                             type: "body",
