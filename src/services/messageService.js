@@ -40,8 +40,8 @@ const getValidToken = async () => {
 export const sendMessage = async (toNumber, messageText) => {
     try {
         const token = await getValidToken();
-        console.log(token);
-        const response = await axios.post(
+
+        await axios.post(
             "https://whatsapp.broadcastermobile.com/whatsapp-bsp-api-endpoint-ws/services/v1/messaging",
             {
                 from: "573164433820",
@@ -70,7 +70,6 @@ export const sendMessage = async (toNumber, messageText) => {
                 },
             }
         );
-        console.log("Mensaje enviado:", response.data);
     } catch (error) {
         console.error(
             "Error al enviar mensaje:",
@@ -99,7 +98,7 @@ export const sendOrderId = async (toNumber, messageText) => {
                 },
             }
         );
-
+        console.log("Envio de orderID ", response);
         return response.data;
     } catch (error) {
         console.error(
@@ -112,7 +111,7 @@ export const sendOrderId = async (toNumber, messageText) => {
 
 export const sendTemplate = async (phone) => {
     try {
-        const response = await axios.post(
+        await axios.post(
             "https://management.broadcasterbot.com/v1/companies/1938/simplifiedTemplates/sendings/",
             {
                 templateName: process.env.TEMPLATE_FINAL,
@@ -130,7 +129,6 @@ export const sendTemplate = async (phone) => {
                 },
             }
         );
-        console.log("Mensaje enviado a Broadcasterbot:", response.data);
     } catch (error) {
         console.error(
             "Error al enviar mensaje a Broadcasterbot:",
