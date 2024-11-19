@@ -82,6 +82,15 @@ export const handleWebhookMetaValidation = async (req, res) => {
 };
 
 export const handleWebhookMeta = async (req, res) => {
-    console.log(req.body.entry[0].changes[0].value);
+    console.log(
+        "numero de telefono:",
+        req.body.entry[0].changes[0].value.contacts[0].wa_id
+    );
+    if (req.body.entry[0].changes[0].value.messages[0].type == "button") {
+        console.log(
+            "respuesta:",
+            req.body.entry[0].changes[0].value.messages[0].button
+        );
+    }
     res.sendStatus(200);
 };
