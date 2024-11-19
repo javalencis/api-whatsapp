@@ -73,5 +73,5 @@ export const cancelOrderHandler = async (req, res) => {
 export const handleWebhookMeta = async (req, res) => {
     console.log("webhook");
     console.log(req.body);
-    res.sendStatus(200);
+    res.status(200).send("Configurando webhook");
 };
