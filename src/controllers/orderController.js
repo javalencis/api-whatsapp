@@ -82,6 +82,6 @@ export const handleWebhookMetaValidation = async (req, res) => {
 };
 
 export const handleWebhookMeta = async (req, res) => {
-    console.log(req.body.entry[0].changes);
+    console.log(req.body.entry[0].changes.value);
     res.sendStatus(200);
 };
