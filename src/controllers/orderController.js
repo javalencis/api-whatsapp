@@ -70,8 +70,18 @@ export const cancelOrderHandler = async (req, res) => {
     }
 };
 
+export const handleWebhookMetaValidation = async (req, res) => {
+    if (
+        req.query["hub.mode"] == "subscribe" &&
+        req.query["hub.verify_token"] == "validacionwebhookmeta"
+    ) {
+        res.send(req.query["hub.challenge"]);
+    } else {
+        res.sendStatus(400);
+    }
+};
+
 export const handleWebhookMeta = async (req, res) => {
-    console.log("webhook");
     console.log(req.body);
-    res.status(200).send("Configurando webhook");
+    res.sendStatus(200);
 };
