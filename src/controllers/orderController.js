@@ -82,7 +82,7 @@ export const handleWebhookMetaValidation = async (req, res) => {
 };
 
 export const handleWebhookMeta = async (req, res) => {
-    console.log(req.body.entry?.[0].changes?.[0]);
+    console.log(req.body.entry?.[0].changes?.[0].value.messages?.[0]);
     if (req.body.entry?.[0].changes?.[0].value.messages?.[0].type == "button") {
         const phone = req.body.entry[0].changes[0].value.contacts[0].wa_id;
         console.log(new Date().toISOString());
