@@ -1,9 +1,16 @@
 import express from "express";
 import router from "./routes/routes.js";
-const app = express();
-app.use(express.json());
-app.use("/", router);
+import connectDB from "./db.js";
 
-app.listen(3000, () => {
-    console.log("Servidor escuchando en 3000");
-});
+async function startServer() {
+    await connectDB();
+    const app = express();
+    app.use(express.json());
+    app.use("/", router);
+
+    app.listen(3000, () => {
+        console.log("Servidor escuchando en 3000");
+    });
+}
+
+startServer();
