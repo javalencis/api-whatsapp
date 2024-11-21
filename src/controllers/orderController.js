@@ -30,12 +30,12 @@ export const handleWebhook = async (req, res) => {
         };
         const newUser = new userModel(user);
         await newUser.save();
-        setTimeout(async () => {
-            await sendMessage("57" + phone, name);
-            await sendOrderId("57" + phone, orderData.OrderId);
-            await sendTemplate(phone);
-            console.log(`Mensaje enviado a ${phone} después de 15 minutos`);
-        }, process.env.DELAYMSN);
+        // setTimeout(async () => {
+        //     await sendMessage("57" + phone, name);
+        //     await sendOrderId("57" + phone, orderData.OrderId);
+        //     await sendTemplate(phone);
+        //     console.log(`Mensaje enviado a ${phone} después de 15 minutos`);
+        // }, process.env.DELAYMSN);
     }
 };
 
