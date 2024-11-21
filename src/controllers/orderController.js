@@ -8,6 +8,7 @@ import { sendTemplate } from "../services/messageService.js";
 import { removeCountryCode } from "../utils/utils.js";
 import { sendMessage } from "../services/messageService.js";
 import { sendOrderId } from "../services/messageService.js";
+import userModel from "../models/user.model.js";
 
 export const handleWebhook = async (req, res) => {
     const orderData = req.body;
@@ -23,6 +24,12 @@ export const handleWebhook = async (req, res) => {
     res.status(200).send("Notificación recibida correctamente");
 
     if (["3007526144", "3012642378", "3167422116"].includes(phone)) {
+        const user = {
+            orderId: orderData.OrderId,
+            phone,
+        };
+        const newUser = new userModel(user);
+        await newUser.save();
         setTimeout(async () => {
             await sendMessage("57" + phone, name);
             await sendOrderId("57" + phone, orderData.OrderId);
